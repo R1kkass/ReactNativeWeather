@@ -1,4 +1,4 @@
-import { StyleSheet, Button, TextInput, View } from "react-native"
+import { StyleSheet, Button, TextInput, View, ScrollView } from "react-native"
 import {useState, useEffect} from 'react'
 import {useAppDispatch, useAppSelector} from "../../app/redux/hooks/index"
 import { cityFetch } from "../../app/redux/ActionCreator"
@@ -18,11 +18,13 @@ const Search = () => {
         <View>
             <TextInput onChangeText={e=>setName(e)} style={style.input} placeholder="Введите город"/>
             <Button onPress={()=>dispatch(cityFetch(name))} title="Поиск"></Button>
-            {
-                cities?.list?.map(city=>(
-                    <UnitCity key={city.id} city={city}></UnitCity>
-                ))
-            }
+            <ScrollView>
+                {
+                    cities?.list?.map(city=>(
+                        <UnitCity key={city.id} city={city}></UnitCity>
+                    ))
+                }
+            </ScrollView>
         </View>
     )
 }

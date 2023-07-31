@@ -3,7 +3,7 @@ import {FC} from 'react'
 import { IUnitCity } from "./interface"
 import { rounded } from "../../app/utils/formats"
 import { useAppDispatch, useAppSelector } from "../../app/redux/hooks"
-import { setCity } from "../../app/redux/WeatherSlice"
+import { initCity, setCity } from "../../app/redux/WeatherSlice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const UnitCity:FC<IUnitCity> = ({city}) => {
@@ -12,8 +12,10 @@ const UnitCity:FC<IUnitCity> = ({city}) => {
     const cities = useAppSelector(state=>state.cityReducer.city)
 
     async function cityAdd() {
-        dispatch(setCity([{name: city.name, id: city.id, country: city.sys.country}]))
-        await AsyncStorage.setItem('city', JSON.stringify(cities))
+        const res = JSON.parse(await AsyncStorage.getItem('city') || "[]")
+        res.push({name: city.name, id: city.id, country: city.sys.country})
+        dispatch(initCity(res))
+        await AsyncStorage.setItem('city', JSON.stringify(res))
     }
 
     return(

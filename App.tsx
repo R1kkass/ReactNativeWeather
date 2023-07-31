@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppDispatch } from './app/redux/hooks';
 import { setCity } from './app/redux/WeatherSlice';
 import WrapperCity from './wrapperCity';
+import WeatherDay from './pages/WeatherDay/WeatherDay';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,8 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen options={{headerShown: false}} name="Home" component={Tabs} />
           <Stack.Screen name="Add" options={{title:"Добавить город"}} component={Search}/>
+          <Stack.Screen name="WeatherDay" options={{title:"Добавить город"}} component={WeatherDay}/>
+
         </Stack.Navigator>
       </NavigationContainer>
       <StatusBar hidden = {false} translucent = {false}/>

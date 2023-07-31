@@ -7,10 +7,11 @@ export interface IWeatherApi {
         humidity: number;
         temp_max: number;
         temp_min: number;
+        pressure: number;
     };
     clouds: {
-        all: number
-    }
+        all: number;
+    };
     sys: {
         country: string;
     };
@@ -34,6 +35,7 @@ interface Weater {
 }
 
 export interface IWeatherOneCallApi {
+    timezone_offset: number
     lat: number;
     timezone: number;
     lon: number;
@@ -48,20 +50,48 @@ export interface IWeatherOneCallApi {
         feels_like: number;
         humidity: number;
     };
+    daily: IDaily[]
+    hourly: IDaily[]
+}
+
+export interface IDaily {
+    dt: number
+    temp: {
+        day: number
+        min: number
+        max: number
+        night: number
+        eve: number
+        morn: number
+    }
+    feels_like: {
+        day: number
+        night: number
+        eve: number
+        morn: number
+    }
+    pressure: number
+    humidity: number
+    wing_deg: number
+    wing_gust: number
+    weather: Weater[],
+    cloud: number
+    pop: number
+    rain: number
+    uvi: number
 }
 
 export const WeaterApi = async (name: string) => {
     const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=70e1ed322b02acbc57d443dd91065f3e&lang=ru`
     );
-    
-    
+
     return response.data;
 };
 
 export const WeaterApiCallOne = async (
-    ion: number | undefined | string,
-    lat: number | undefined | string
+    lat: number | undefined | string,
+    ion: number | undefined | string
 ) => {
     const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${ion}&exclude&appid=70e1ed322b02acbc57d443dd91065f3e&lang=ru`
@@ -69,10 +99,9 @@ export const WeaterApiCallOne = async (
     return response.data;
 };
 
-export const WeaterApiFind = async (name: string) =>{
-    
+export const WeaterApiFind = async (name: string) => {
     const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/find?q=${name}&appid=70e1ed322b02acbc57d443dd91065f3e&lang=ru`
     );
     return response.data;
-}
+};
