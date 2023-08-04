@@ -72,8 +72,9 @@ export interface IDaily {
     }
     pressure: number
     humidity: number
-    wing_deg: number
-    wing_gust: number
+    wind_deg: number
+    wind_gust: number
+    wind_speed: number
     weather: Weater[],
     cloud: number
     pop: number
@@ -88,6 +89,15 @@ export const WeaterApi = async (name: string) => {
 
     return response.data;
 };
+
+export const WeaterApiId = async (id: number) => {
+    const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?id=${id}&appid=70e1ed322b02acbc57d443dd91065f3e&lang=ru`
+    );
+
+    return response.data;
+};
+
 
 export const WeaterApiCallOne = async (
     lat: number | undefined | string,

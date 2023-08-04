@@ -1,7 +1,7 @@
 import { styled } from "styled-components/native";
 import { LineChart } from "react-native-chart-kit";
-import { Dimensions, View } from "react-native";
-import { FC, useEffect, useLayoutEffect, useState } from "react";
+import { Dimensions, View, ScrollView } from "react-native";
+import { FC, Fragment, useEffect, useLayoutEffect, useState } from "react";
 import { IWeatherDay } from "./interface";
 import { rounded } from "../../app/utils/formats";
 import dayjs from "dayjs";
@@ -9,6 +9,7 @@ import { primary } from "../../app/const/color";
 import Svg, {
     Circle,
     G,
+    Image,
     Path,
     Polygon,
     Polyline,
@@ -18,8 +19,12 @@ import Svg, {
 } from "react-native-svg";
 import Stroke from "../../entities/Stroke/Stroke";
 import TextSvg from "../../entities/TextSvg/TextSvg";
+import TextWeather from "../../entities/TextWeather/TextWeather";
+import WindSvg from "../../entities/WindSvg/WindSvg";
 
-let width = 100 / 8;
+let width = 100 / 9;
+let height = Dimensions.get("window").height / 2;
+let widthFull = Dimensions.get("window").width / 7;
 
 const WeatherDay: FC<IWeatherDay> = ({ route }) => {
     const daily = route.params.daily;
@@ -44,74 +49,67 @@ const WeatherDay: FC<IWeatherDay> = ({ route }) => {
     }, []);
 
     return (
-        <>
+        <ScrollView
+            horizontal={true}
+            // style={{ width: "100%", backgroundColor: "rbga(0,0,0,1)" }}
+        >
             <WeatherView>
-                {daily?.map((day, index) => (
-                    <MiniView>{/* <Text>{day.dt}</Text> */}</MiniView>
-                ))}
+                <Svg height="100%" width="100%" viewBox="0 0 100 100">
+                    <Rect width="10" height="60" y="0" fill="rgba(0,0,0,0.1)" rx="2" x="6" />                        
+                    {daily?.map((day, index) => (
+                        <Fragment key={day.dt}>
+                            <TextWeather
+                                index={index}
+                                day={day}
+                                width={width}
+                            />
+                            <WindSvg index={index} day={day} width={width} />
+                            <Stroke
+                                day={day}
+                                index={index}
+                                daily={daily}
+                                minus={80}
+                                type="day"
+                            />
+                            <TextSvg
+                                daily={daily}
+                                type="day"
+                                day={day}
+                                index={index}
+                                minus={-76}
+                            />
+                        </Fragment>
+                    ))}
+                    {daily?.map((day, index) => (
+                        <Fragment key={day.dt}>
+                            <Stroke
+                                day={day}
+                                index={index}
+                                daily={daily}
+                                minus={100}
+                                type="night"
+                            />
+                            <TextSvg
+                                type="night"
+                                daily={daily}
+                                day={day}
+                                index={index}
+                                minus={-108}
+                            />
+                        </Fragment>
+                    ))}
+                </Svg>
             </WeatherView>
-            <Svg height="100%" width="100%" viewBox="0 0 100 100">
-                <Polyline
-                    strokeWidth={0.3}
-                    stroke="black"
-                    fill="red"
-                    points={`0,10 10,20`}
-                />
-                {daily?.map((day, index) => (
-                    
-                    <>
-                        <Stroke
-                            day={day}
-                            index={index}
-                            daily={daily}
-                            minus={0}
-                            type="day"
-                        />
-                        <TextSvg
-                            daily={daily}
-                            type="day"
-                            day={day}
-                            index={index}
-                            minus={5}
-                        />
-                    </>
-                ))}
-                {daily?.map((day, index) => (
-                    <>
-                        <Stroke
-                            day={day}
-                            index={index}
-                            daily={daily}
-                            minus={30}
-                            type="night"
-                        />
-                        <TextSvg
-                            type="night"
-                            daily={daily}
-                            day={day}
-                            index={index}
-                            minus={-35}
-                        />
-                    </>
-                ))}
-            </Svg>
-            <WeatherView />
-        </>
+        </ScrollView>
     );
 };
 
 const WeatherView = styled.View`
-    width: 100%;
+    background: white;
+    width: ${9 * widthFull}px;
     display: flex;
     flex-direction: row;
-    height: 50px;
-    background: red;
 `;
 
-const MiniView = styled.View`
-    width: 12.5%;
-    background: white;
-    border: 1px solid;
-`;
 
 export default WeatherDay;

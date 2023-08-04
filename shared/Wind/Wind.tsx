@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         paddingBottom: 5,
         display: 'flex',
-        height: 100,
+        height: "100%",
         flexShrink: 0,
         justifyContent: 'center',
         alignItems: 'center',

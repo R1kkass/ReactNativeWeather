@@ -46,7 +46,9 @@ const style = StyleSheet.create({
     },
     img: {
         width: "100%",
-        height: 200,
+        // height: "auto",
+        // minHeight: "auto",
+        flex: 0.5
     },
     text: {
         fontSize: 70,

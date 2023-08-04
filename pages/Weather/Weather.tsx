@@ -6,7 +6,7 @@ import {
     Text,
     View,
 } from "react-native";
-import { IWeatherApi, IWeatherOneCallApi, WeaterApi, WeaterApiCallOne } from "../../app/api/WeatherApi";
+import { IWeatherApi, IWeatherOneCallApi, WeaterApi, WeaterApiCallOne, WeaterApiId } from "../../app/api/WeatherApi";
 import { useState, useEffect, useCallback } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { rounded, toUpper } from "../../app/utils/formats";
@@ -18,6 +18,7 @@ import { useAppSelector } from "../../app/redux/hooks";
 import Humidity from "../../shared/Humidity/Humidity";
 import Daily from "../../widget/Daily/Daily";
 import MainWeather from "../../widget/MainWeather/MainWeather";
+import WeatherHour from "../../widget/WeatherHour/WeatherHour";
 
 const Weather = ({ route, navigation }) => {
     const isFocused = useIsFocused();
@@ -32,7 +33,7 @@ const Weather = ({ route, navigation }) => {
     function fetchWeather() {
         if (isFocused) {
             setIsLoading(true);
-            WeaterApi(route.params.name)
+            WeaterApiId(route.params.id)
                 .then(async (e) => {
                     setWeather(e);
                     setIsLoading(false);
@@ -86,6 +87,7 @@ const Weather = ({ route, navigation }) => {
                         <Humidity weather={weather} />
                     </View>
                 </View>
+                <WeatherHour/>
             </LinearGradient>
         </ScrollView>
     );
@@ -95,11 +97,14 @@ export default Weather;
 
 const styles = StyleSheet.create({
     scroll: {
-        height: 1000,
+        height: "100%",
         width: "100%",
         paddingTop: 40,
         color: "white",
         backgroundColor: primary(),
+        paddingBottom: 10,
+        paddingLeft: 10,
+        paddingRight: 10
     },
 
     minMax: {
@@ -112,12 +117,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        paddingLeft: 5,
-        paddingRight: 5,
         gap: 15,
     },
     fisrstLine: {
         width: "100%",
+        height: 'auto',
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",

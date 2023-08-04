@@ -8,7 +8,7 @@ const Daily: FC<IDaily> = ({ oneCall, navigation }) => {
 
     return (
         <DailyView onPress={() => navigation.navigate("WeatherDay", {daily: oneCall.daily})}>
-            <TextDay>Прогноз на 5 дней</TextDay>
+            <TextDay>Прогноз на 7 дней</TextDay>
             {oneCall?.daily.slice(0, 3).map((day) => (
                 <UnitWeather
                     timezone_offset={oneCall?.timezone_offset}
@@ -16,7 +16,7 @@ const Daily: FC<IDaily> = ({ oneCall, navigation }) => {
                 />
             ))}
             <ViewButton>
-                <TextDay opacity={1}>Прогноз на 5 дней</TextDay>
+                <TextDay opacity={1}>Прогноз на 7 дней</TextDay>
             </ViewButton>
         </DailyView>
     );

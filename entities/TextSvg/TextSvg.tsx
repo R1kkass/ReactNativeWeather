@@ -10,15 +10,17 @@ import Svg, {
 } from "react-native-svg";
 import { rounded } from "../../app/utils/formats";
 
+let width = 100 / 9;
+
 const TextSvg = ({ day, daily, index, minus, type }) => {
     return (
-        <Text fontSize="4">
+        <Text fontSize="2.8">
             <TSpan
-                y={`${(day?.temp?.[type] - 273.15 + minus) *-1} `}
-                x={`${index * 12.5 - 2.5}`}
+                y={`${(day?.temp?.[type] - 273.15 + minus) *-1 / 2.5} `}
+                x={`${(index + 1) * width - 1.5}`}
                 fill="black"
             >
-                {rounded(day.temp?.[type])}
+                {rounded(day.temp?.[type])}°
             </TSpan>
         </Text>
     );

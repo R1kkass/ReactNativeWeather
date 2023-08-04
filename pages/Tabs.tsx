@@ -32,7 +32,7 @@ export default function Tabs({ navigation }) {
         <>
             <TouchableOpacity
                 style={style.plus}
-                onPress={() => navigation.navigate("WeatherDay")}
+                onPress={() => navigation.navigate("AllCity")}
             >
                 <Text style={style.text}>+</Text>
             </TouchableOpacity>
@@ -71,9 +71,10 @@ export default function Tabs({ navigation }) {
                     cities2?.map((city, index) => (
                         <Tab.Screen
                             key={city?.name || 1}
-                            name={city?.name + String(index)}
+                            name={String(city?.id)}
+                            options={{title: city?.name}}
                             component={Weather}
-                            initialParams={{ name: city?.name || "hg" }}
+                            initialParams={{ name: city?.name || "hg", id: city?.id }}
                         />
                     ))
                 ) : (
