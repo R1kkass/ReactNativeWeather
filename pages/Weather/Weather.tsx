@@ -87,7 +87,7 @@ const Weather = ({ route, navigation }) => {
                         <Humidity weather={weather} />
                     </View>
                 </View>
-                <WeatherHour/>
+                <WeatherHour oneCall={oneCall}/>
             </LinearGradient>
         </ScrollView>
     );

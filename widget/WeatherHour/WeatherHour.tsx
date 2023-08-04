@@ -1,34 +1,42 @@
-import { View } from "react-native";
 import { Path, Rect, Svg } from "react-native-svg";
 import { styled } from "styled-components/native";
+import { FC } from "react";
+import { IWeatherHour } from "./interface";
+import { ScrollView, Text, View } from "react-native";
 
-const WeatherHour = () => {
+const WeatherHour: FC<IWeatherHour> = ({ oneCall }) => {
+    console.log(oneCall.hourly);
+
     return (
-        <WeatherView>
-            <Svg height="100%" width="100%" viewBox="0 0 100 100">
-                <Path
-                    d="M10,20 C10,10 25,10 25,20 25,30 40,30 40,20"
-                    fill="none"
-                    stroke="red"
-                    strokeWidth={3}
-                />
-                <Path
-                    d="M40,20 C10,10 55,50 55,50 S 80,30 80,20"
-                    fill="none"
-                    stroke="blue"
-                    strokeWidth={3}
-                />
-            </Svg>
+        <WeatherView
+            style={{ minWidth: "100%", height: "100%" }}
+            horizontal={true}
+        >
+            <View style={{width: 5800}}>
+                <Svg height="100%" width="100%" viewBox="0 0 1440 50">
+                    {oneCall?.hourly?.map((call, index) => (
+                        <Path
+                            d={`M${index * 30},${
+                                call.temp - 273.15
+                            } q 0 0 30 0`}
+                            fill="none"
+                            stroke="red"
+                            strokeWidth={1}
+                        />
+                    ))}
+                </Svg>
+                <Text style={{ fontSize: 100, color: "white" }}>fds</Text>
+            </View>
         </WeatherView>
     );
 };
 
 export default WeatherHour;
 
-const WeatherView = styled.View`
+const WeatherView = styled.ScrollView`
     width: 100%;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 20px;
-    height: 200px;
+    min-height: 200px;
     margin-top: 10px;
 `;
