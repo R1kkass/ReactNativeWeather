@@ -6,7 +6,13 @@ import {
     Text,
     View,
 } from "react-native";
-import { IWeatherApi, IWeatherOneCallApi, WeaterApi, WeaterApiCallOne, WeaterApiId } from "../../app/api/WeatherApi";
+import {
+    IWeatherApi,
+    IWeatherOneCallApi,
+    WeaterApi,
+    WeaterApiCallOne,
+    WeaterApiId,
+} from "../../app/api/WeatherApi";
 import { useState, useEffect, useCallback } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { rounded, toUpper } from "../../app/utils/formats";
@@ -19,12 +25,13 @@ import Humidity from "../../shared/Humidity/Humidity";
 import Daily from "../../widget/Daily/Daily";
 import MainWeather from "../../widget/MainWeather/MainWeather";
 import WeatherHour from "../../widget/WeatherHour/WeatherHour";
+import { styled } from "styled-components/native";
 
 const Weather = ({ route, navigation }) => {
     const isFocused = useIsFocused();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [oneCall, setOneCall] = useState<IWeatherOneCallApi>()
+    const [oneCall, setOneCall] = useState<IWeatherOneCallApi>();
     const [weather, setWeather] = useState<IWeatherApi>();
     useEffect(() => {
         fetchWeather();
@@ -37,7 +44,9 @@ const Weather = ({ route, navigation }) => {
                 .then(async (e) => {
                     setWeather(e);
                     setIsLoading(false);
-                    setOneCall(await WeaterApiCallOne(e.coord.lat, e.coord.lon))
+                    setOneCall(
+                        await WeaterApiCallOne(e.coord.lat, e.coord.lon)
+                    );
                 })
                 .catch((e) => {
                     setIsLoading(false);
@@ -80,20 +89,28 @@ const Weather = ({ route, navigation }) => {
             >
                 <MainWeather oneCall={oneCall} weather={weather} />
                 <View style={styles.container}>
-                    <Daily navigation={navigation} oneCall = {oneCall}/>
+                    <Daily navigation={navigation} oneCall={oneCall} />
+                    <WeatherHour oneCall={oneCall} />
 
                     <View style={styles.fisrstLine}>
                         <Wind weather={weather} />
                         <Humidity weather={weather} />
                     </View>
                 </View>
-                <WeatherHour oneCall={oneCall}/>
             </LinearGradient>
         </ScrollView>
     );
 };
 
 export default Weather;
+
+const WeatherView = styled.View`
+    width: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    min-height: 200px;
+    margin-top: 10px;
+`;
 
 const styles = StyleSheet.create({
     scroll: {
@@ -104,7 +121,7 @@ const styles = StyleSheet.create({
         backgroundColor: primary(),
         paddingBottom: 10,
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
     },
 
     minMax: {
@@ -121,7 +138,7 @@ const styles = StyleSheet.create({
     },
     fisrstLine: {
         width: "100%",
-        height: 'auto',
+        height: "auto",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",

@@ -15,6 +15,11 @@ import { primary } from "../../app/const/color";
 let width = 100 / 9;
 
 const Stroke = ({ index, daily, day, minus, type }) => {
+
+    if(!day || !daily.length) {
+        return <Text>Loading...</Text>
+    }
+
     if (index == 0) {
         return (
             <>
@@ -23,7 +28,7 @@ const Stroke = ({ index, daily, day, minus, type }) => {
                     stroke={'gray'}
                     fill="red"
                     points={`0,${
-                        (rounded(daily[0].temp?.[type]) - minus) * -1 / 2.5
+                        (rounded(daily?.[0]?.temp?.[type]) - minus) * -1 / 2.5
                     } ${width},${(rounded(daily[0].temp?.[type]) - minus) * -1 / 2.5}`}
                 />
                  <Polyline
@@ -42,13 +47,13 @@ const Stroke = ({ index, daily, day, minus, type }) => {
             />
             <Circle
                 cx={(index+1) * width}
-                cy={(daily?.[index].temp?.[type] - 273.15 - Number(minus)) * -1 / 2.5}
+                cy={(daily?.[index]?.temp?.[type] - 273.15 - Number(minus)) * -1 / 2.5}
                 r="1.2"
                 fill={primary()}
             />
             <Circle
                 cx={(index+1) * width}
-                cy={(daily?.[index].temp?.[type] - 273.15 - Number(minus)) * -1 / 2.5}
+                cy={(daily?.[index]?.temp?.[type] - 273.15 - Number(minus)) * -1 / 2.5}
                 r="0.5"
                 fill={"white"}
             />

@@ -1,9 +1,11 @@
-import { View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { useAppSelector } from "../../app/redux/hooks";
 import { styled } from "styled-components/native";
 import { ScrollView, TouchableOpacity } from "react-native";
 import AllCityUnit from "../../shared/AllCityUnit/AllCityUnit";
 import { useState } from "react";
+
+const height = Dimensions.get('window').height/7
 
 const CityList = ({ navigation }) => {
     const cities = useAppSelector((state) => state.cityReducer.city);
@@ -31,7 +33,7 @@ export default CityList;
 
 const CityView = styled.View`
     width: 100%;
-    height: 100px;
+    height: ${height}px;
     border-radius: 20px;
     background: white;
     overflow: hidden;
@@ -69,7 +71,7 @@ const ViewSearch = styled.View`
 
 const ButtonDelete = styled.View`
     position: fixed;
-    bottom: 0;
+    top: 0;
     width: 100%;
     flex: 1;
     height: 200px;

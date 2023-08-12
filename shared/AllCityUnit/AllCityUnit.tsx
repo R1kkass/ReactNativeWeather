@@ -2,9 +2,11 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { styled } from "styled-components/native";
 import { IWeatherApi, WeaterApiId } from "../../app/api/WeatherApi";
 import { colorSet, gradient } from "../../app/utils/gradient";
-import { Image } from "react-native";
+import { Dimensions, Image } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { primary } from "../../app/const/color";
+
+const height = Dimensions.get('window').height / 10
 
 const AllCityUnit = ({ city, visible, callback }) => {
     const [weather, setWeather] = useState<IWeatherApi | null>();
@@ -62,7 +64,7 @@ const TextCity = styled.Text`
 
 const CityView = styled.TouchableOpacity<{ color: string | undefined }>`
     width: 100%;
-    height: 120px;
+    height: ${height}px;
     border-radius: 20px;
     background: ${(props) => (props.color ? props.color : "white")};
     overflow: hidden;
