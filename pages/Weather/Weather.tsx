@@ -5,6 +5,7 @@ import {
     StyleSheet,
     Text,
     View,
+    TouchableOpacity
 } from "react-native";
 import {
     IWeatherApi,
@@ -15,7 +16,6 @@ import {
 } from "../../app/api/WeatherApi";
 import { useState, useEffect, useCallback } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import { rounded, toUpper } from "../../app/utils/formats";
 import { primary } from "../../app/const/color";
 import Wind from "../../shared/Wind/Wind";
 import { LinearGradient } from "expo-linear-gradient";
@@ -26,6 +26,7 @@ import Daily from "../../widget/Daily/Daily";
 import MainWeather from "../../widget/MainWeather/MainWeather";
 import WeatherHour from "../../widget/WeatherHour/WeatherHour";
 import { styled } from "styled-components/native";
+import {WebView} from "react-native-webview";
 
 const Weather = ({ route, navigation }) => {
     const isFocused = useIsFocused();
@@ -97,6 +98,9 @@ const Weather = ({ route, navigation }) => {
                         <Humidity weather={weather} />
                     </View>
                 </View>
+                <TouchableOpacity onPress={() => navigation.navigate("Map", {weather})}>
+                <Text >Карта</Text>
+                </TouchableOpacity>
             </LinearGradient>
         </ScrollView>
     );
