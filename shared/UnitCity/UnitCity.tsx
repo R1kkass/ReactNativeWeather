@@ -10,10 +10,16 @@ const UnitCity: FC<IUnitCity> = ({ city }) => {
     const dispatch = useAppDispatch();
     const cities = useAppSelector((state) => state.cityReducer.city);
     async function cityAdd() {
-        let a = cities.find((citys) => {
-            return citys.id == city.id;
-        });
-        if (!a) {
+        let a = 1;
+        console.log(a);
+
+        if (cities?.length) {
+            a = cities.find((citys) => {
+                return citys.id == city.id;
+            });
+        }
+        
+        if (a!==undefined) {
             const res = JSON.parse(
                 (await AsyncStorage.getItem("city")) || "[]"
             );

@@ -10,7 +10,6 @@ import { initCity } from "../../app/redux/WeatherSlice";
 import Styles from "./Styles";
 import { ICityList } from "./interface";
 import { FC } from "react";
-import Geolocation from 'react-native-geolocation-service';
 
 const maxHeight = Dimensions.get("window").height;
 
