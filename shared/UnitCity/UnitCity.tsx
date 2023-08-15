@@ -10,7 +10,7 @@ const UnitCity: FC<IUnitCity> = ({ city }) => {
     const dispatch = useAppDispatch();
     const cities = useAppSelector((state) => state.cityReducer.city);
     async function cityAdd() {
-        let a = 1;
+        let a = undefined;
         console.log(a);
 
         if (cities?.length) {
@@ -19,7 +19,7 @@ const UnitCity: FC<IUnitCity> = ({ city }) => {
             });
         }
         
-        if (a!==undefined) {
+        if (a==undefined) {
             const res = JSON.parse(
                 (await AsyncStorage.getItem("city")) || "[]"
             );
