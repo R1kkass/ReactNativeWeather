@@ -5,16 +5,48 @@ import { colorSet, gradient } from "../../app/utils/gradient";
 import { Dimensions, Image } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { primary } from "../../app/const/color";
+import Animated, {
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+} from "react-native-reanimated";
+import CheckBoxCity from "../../entities/CheckBoxCity/CheckBoxCity";
+import { useQuery } from "react-query";
 
-const height = Dimensions.get('window').height / 10
+const height = Dimensions.get("window").height / 10;
 
-const AllCityUnit = ({ city, visible, callback }) => {
-    const [weather, setWeather] = useState<IWeatherApi | null>();
-    useLayoutEffect(() => {
-        WeaterApiId(city.id).then((e) => {
-            setWeather(e);
-        });
-    }, []);
+const AllCityUnit = ({ city, visible, callback, push }) => {
+
+    const {data: weather, isLoading, isError}  = useQuery('weather', ()=>WeaterApiId(city.id))
+
+    const translateX = useSharedValue(-70);
+    const handlePress = (num: number) => {
+        translateX.value = num;
+    };
+
+
+
+    useEffect(() => {
+        
+        if (visible) {
+            handlePress(0);
+        } else if (!visible) {
+            handlePress(-70);
+        }
+    }, [visible]);
+
+    const animatedStyles = useAnimatedStyle(() => ({
+        transform: [{ translateX: withSpring(translateX.value) }],
+    }));
+
+
+    if(isLoading) {
+        return <TextCity>Загрузка...</TextCity>
+    }
+
+    if(isError) {
+        return <TextCity>Ошибка</TextCity>
+    }
 
     return (
         <CityView
@@ -22,26 +54,11 @@ const AllCityUnit = ({ city, visible, callback }) => {
             color={colorSet(weather?.weather?.[0].icon)}
             key={city.id}
         >
-            {visible && <Image source={require("../../assets/burger.png")} />}
+            <Animated.View style={[animatedStyles, {position: !visible ? 'absolute' : 'relative'}]}>
+                <Image source={require("../../assets/burger.png")} />
+            </Animated.View>
             <TextCity>{city.name}</TextCity>
-            <Image
-                source={require("../../assets/delete.png")}
-                width={20}
-                height={20}
-            />
-            {visible && (
-                <>
-                    <BouncyCheckbox
-                        // value={false}
-                        size={40}
-                        fillColor={primary()}
-                        style={{ marginLeft: "auto" }}
-                        textStyle={{ fontSize: 20 }}
-                        // onValueChange={setSelection}
-                        // style={styles.checkbox}
-                    />
-                </>
-            )}
+            <CheckBoxCity callback={()=>push(city.id)} visible={visible}/>
         </CityView>
     );
 };
@@ -60,6 +77,7 @@ const ViewContainer = styled.View`
 const TextCity = styled.Text`
     font-size: 30px;
     color: white;
+    transition: all 0.5s ease-out;
 `;
 
 const CityView = styled.TouchableOpacity<{ color: string | undefined }>`
@@ -75,5 +93,3 @@ const CityView = styled.TouchableOpacity<{ color: string | undefined }>`
     elevation: 3;
     position: static;
 `;
-
-

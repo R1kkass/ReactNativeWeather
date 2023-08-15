@@ -2,11 +2,21 @@ import { WeaterApiFind } from "../api/WeatherApi";
 import { setCityApi, setLoading } from "./CitySlice";
 import { AppDispatch } from "./store";
 
-export const cityFetch = (name: string) => async (dispatch: AppDispatch) => {
+export const cityFetch = (name: any) => async (dispatch: AppDispatch) => {
     try {
         dispatch(setLoading(true))
-        const e = await WeaterApiFind(name)
-        dispatch(setCityApi(e))
+        let cities2 = await WeaterApiFind(name.name)
+
+
+        for(let i=0; i<name.citis.length; i++) {
+            cities2.list = cities2.list.filter(city=>{
+                if( city.id != name.citis[i].id){
+                    return city
+                }
+            })
+        }
+        
+        dispatch(setCityApi(cities2))
         dispatch(setLoading(false))
     }catch(e){
         dispatch(setLoading(false))

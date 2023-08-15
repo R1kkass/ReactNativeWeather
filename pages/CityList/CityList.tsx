@@ -1,80 +1,79 @@
-import { Dimensions, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { useAppSelector } from "../../app/redux/hooks";
-import { styled } from "styled-components/native";
 import { ScrollView, TouchableOpacity } from "react-native";
 import AllCityUnit from "../../shared/AllCityUnit/AllCityUnit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import ButtonDelete from "../../entities/ButtonDelete/ButtonDelete";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { initCity } from "../../app/redux/WeatherSlice";
+import Styles from "./Styles";
+import { ICityList } from "./interface";
+import { FC } from "react";
+import Geolocation from 'react-native-geolocation-service';
 
-const height = Dimensions.get('window').height/7
+const maxHeight = Dimensions.get("window").height;
 
-const CityList = ({ navigation }) => {
+const CityList: FC<ICityList> = ({ navigation }) => {
     const cities = useAppSelector((state) => state.cityReducer.city);
-    const [visible, setVisible] = useState(false)
+    const dispatch = useDispatch();
+    const [visible, setVisible] = useState(false);
+
+    const [array, setArray] = useState([]);
+
+    const push = (val: string) => {
+        if (!array.join(" ").includes(val)) {
+            setArray([...array, val]);
+        } else {
+            setArray(
+                array.filter((arr) => {
+                    return arr != val;
+                })
+            );
+        }
+    };
+
+    const deleteArray = async () => {
+        let a = [...cities];
+        for (let i = 0; i < array.length; i++) {
+            a = a.filter((city) => {
+                if (city.id != array[i]) {
+                    return city;
+                }
+            });
+        }
+        await AsyncStorage.setItem("city", JSON.stringify(a));
+
+        dispatch(initCity(a));
+    };
 
     return (
-        <ScrollView style={{minHeight: 1000}}>
-            <ViewContainer>
-                <TouchableOpacity onPress={()=>navigation.navigate('Add')}>
-                    <ViewSearch>
-                        <TextCity>Введите местоположение</TextCity>
-                    </ViewSearch>
-                </TouchableOpacity>
-                {cities?.map((city) => (
-                    <AllCityUnit callback = {()=>setVisible(p=>!p)} visible={visible} city={city} />
-                ))}
-                    <ButtonDelete />
-
-            </ViewContainer>
-        </ScrollView>
+        <View style={{ minHeight: maxHeight }}>
+            <ScrollView style={{ maxHeight: maxHeight - (visible ? 100 : 60) }}>
+                <Styles.ViewContainer style={{ paddingBottom: visible && 100 }}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("Add")}
+                    >
+                        <Styles.ViewSearch>
+                            <Styles.TextCity>
+                                Введите местоположение
+                            </Styles.TextCity>
+                        </Styles.ViewSearch>
+                    </TouchableOpacity>
+                    {cities?.map((city) => (
+                        <AllCityUnit
+                            key={city.id}
+                            push={push}
+                            callback={() => setVisible((p) => !p)}
+                            visible={visible}
+                            city={city}
+                        />
+                    ))}
+                </Styles.ViewContainer>
+            </ScrollView>
+            <ButtonDelete callback={deleteArray} visisble={visible} />
+        </View>
     );
 };
 
 export default CityList;
-
-const CityView = styled.View`
-    width: 100%;
-    height: ${height}px;
-    border-radius: 20px;
-    background: white;
-    overflow: hidden;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    elevation: 3;
-`;
-
-const ViewContainer = styled.View`
-    width: 100%;
-    dislay: flex;
-    gap: 10px;
-    height: 100%;
-    padding: 10px;
-    padding: 10px;
-`;
-
-const TextCity = styled.Text`
-    font-size: 20px;
-    color: rgb(10,10,10);
-`;
-
-const ViewSearch = styled.View`
-    height: 40px;
-    background: rgba(258, 208,208, 0.1);
-    width: 100%;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    padding-left: 10px;
-    border: 1px solid gray;
-    elevation: 3;
-`;
-
-const ButtonDelete = styled.View`
-    position: fixed;
-    top: 0;
-    width: 100%;
-    flex: 1;
-    height: 200px;
-    background: white;
-    left: 0;
-`;

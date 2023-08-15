@@ -26,7 +26,6 @@ import Daily from "../../widget/Daily/Daily";
 import MainWeather from "../../widget/MainWeather/MainWeather";
 import WeatherHour from "../../widget/WeatherHour/WeatherHour";
 import { styled } from "styled-components/native";
-import {WebView} from "react-native-webview";
 
 const Weather = ({ route, navigation }) => {
     const isFocused = useIsFocused();

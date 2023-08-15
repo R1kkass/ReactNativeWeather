@@ -1,21 +1,11 @@
 import { styled } from "styled-components/native";
-import { LineChart } from "react-native-chart-kit";
-import { Dimensions, View, ScrollView } from "react-native";
-import { FC, Fragment, useEffect, useLayoutEffect, useState } from "react";
+import { Dimensions, ScrollView } from "react-native";
+import { FC, Fragment, useLayoutEffect, useState } from "react";
 import { IWeatherDay } from "./interface";
 import { rounded } from "../../app/utils/formats";
 import dayjs from "dayjs";
-import { primary } from "../../app/const/color";
 import Svg, {
-    Circle,
-    G,
-    Image,
-    Path,
-    Polygon,
-    Polyline,
     Rect,
-    Text,
-    TSpan,
 } from "react-native-svg";
 import Stroke from "../../entities/Stroke/Stroke";
 import TextSvg from "../../entities/TextSvg/TextSvg";
@@ -23,14 +13,10 @@ import TextWeather from "../../entities/TextWeather/TextWeather";
 import WindSvg from "../../entities/WindSvg/WindSvg";
 
 let width = 100 / 9;
-let height = Dimensions.get("window").height / 2;
 let widthFull = Dimensions.get("window").width / 7;
 
 const WeatherDay: FC<IWeatherDay> = ({ route }) => {
     const daily = route.params.daily;
-    const [labels, setLabels] = useState<Array<string> | null>();
-    const [data, setData] = useState<Array<number> | null>();
-    const [data2, setData2] = useState<Array<number> | null>();
 
     useLayoutEffect(() => {
         let res = [];
@@ -39,19 +25,13 @@ const WeatherDay: FC<IWeatherDay> = ({ route }) => {
         for (let i = 0; i < daily?.length; i++) {
             res.push(rounded(daily[i].temp.day));
             res3.push(rounded(daily[i].temp.night));
-
             res2.push(`${dayjs(daily[i].dt * 1000).format("DD.MM")}`);
         }
-        console.log(daily.length);
-        setLabels(res2);
-        setData(res);
-        setData2(res3);
     }, []);
 
     return (
         <ScrollView
             horizontal={true}
-            // style={{ width: "100%", backgroundColor: "rbga(0,0,0,1)" }}
         >
             <WeatherView>
                 <Svg height="100%" width="100%" viewBox="0 0 100 100">
