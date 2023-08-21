@@ -5,7 +5,7 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity
+    TouchableOpacity,
 } from "react-native";
 import {
     IWeatherApi,
@@ -26,6 +26,8 @@ import Daily from "../../widget/Daily/Daily";
 import MainWeather from "../../widget/MainWeather/MainWeather";
 import WeatherHour from "../../widget/WeatherHour/WeatherHour";
 import { styled } from "styled-components/native";
+import { styles } from "./Styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Weather = ({ route, navigation }) => {
     const isFocused = useIsFocused();
@@ -33,6 +35,7 @@ const Weather = ({ route, navigation }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [oneCall, setOneCall] = useState<IWeatherOneCallApi>();
     const [weather, setWeather] = useState<IWeatherApi>();
+
     useEffect(() => {
         fetchWeather();
     }, [isFocused]);
@@ -43,10 +46,12 @@ const Weather = ({ route, navigation }) => {
             WeaterApiId(route.params.id)
                 .then(async (e) => {
                     setWeather(e);
-                    setIsLoading(false);
+                    let a = await WeaterApiCallOne(e.coord.lat, e.coord.lon)
+                    await AsyncStorage.setItem('oneCall', JSON.stringify(a))
                     setOneCall(
-                        await WeaterApiCallOne(e.coord.lat, e.coord.lon)
+                        a
                     );
+                    setIsLoading(false);
                 })
                 .catch((e) => {
                     setIsLoading(false);
@@ -88,6 +93,8 @@ const Weather = ({ route, navigation }) => {
                 colors={gradient(weather.weather[0].icon)}
             >
                 <MainWeather oneCall={oneCall} weather={weather} />
+                
+
                 <View style={styles.container}>
                     <Daily navigation={navigation} oneCall={oneCall} />
                     <WeatherHour oneCall={oneCall} />
@@ -97,8 +104,10 @@ const Weather = ({ route, navigation }) => {
                         <Humidity weather={weather} />
                     </View>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate("Map", {weather})}>
-                <Text >Карта</Text>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("Map", { weather })}
+                >
+                    <Text>Карта</Text>
                 </TouchableOpacity>
             </LinearGradient>
         </ScrollView>
@@ -107,43 +116,3 @@ const Weather = ({ route, navigation }) => {
 
 export default Weather;
 
-const WeatherView = styled.View`
-    width: 100%;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    min-height: 200px;
-    margin-top: 10px;
-`;
-
-const styles = StyleSheet.create({
-    scroll: {
-        height: "100%",
-        width: "100%",
-        paddingTop: 40,
-        color: "white",
-        backgroundColor: primary(),
-        paddingBottom: 10,
-        paddingLeft: 10,
-        paddingRight: 10,
-    },
-
-    minMax: {
-        textAlign: "center",
-        fontSize: 20,
-        color: "white",
-    },
-    container: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-        gap: 15,
-    },
-    fisrstLine: {
-        width: "100%",
-        height: "auto",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-});

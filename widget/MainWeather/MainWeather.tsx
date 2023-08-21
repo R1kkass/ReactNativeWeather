@@ -10,6 +10,7 @@ const MainWeather: FC<IHumidity> = ({ weather, oneCall }) => {
 
     return (
         <View style={style.main}>
+            <Text style={{position: 'absolute', top: 25, textAlign: 'center', width: "100%", fontSize: 28, color: 'white', fontWeight: '700'}}>{weather.name}</Text>
             <Image
                 style={style.img}
                 source={{
@@ -35,6 +36,7 @@ export default MainWeather;
 
 const style = StyleSheet.create({
     main: {
+        position: 'relative',
         height: halfWindowsWidth,
         display: "flex",
         justifyContent: "center",

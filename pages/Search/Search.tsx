@@ -16,7 +16,7 @@ const Search = () => {
             <ViewSearch
                 onChangeText={(e) => setName(e)}
                 style={style.input}
-                placeholder="Введите город"
+                placeholder="Введите местоположение"
             ></ViewSearch>
             <Button
                 onPress={() => dispatch(cityFetch({ name, citis: cities2 }))}

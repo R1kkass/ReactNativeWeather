@@ -5,13 +5,15 @@ import { rounded } from "../../app/utils/formats";
 import { useAppDispatch, useAppSelector } from "../../app/redux/hooks";
 import { initCity, setCity } from "../../app/redux/WeatherSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setCityApi } from "../../app/redux/CitySlice";
 
 const UnitCity: FC<IUnitCity> = ({ city }) => {
     const dispatch = useAppDispatch();
     const cities = useAppSelector((state) => state.cityReducer.city);
+    let cities2 = useAppSelector((state) => state.cityApiReducer.city);
+
     async function cityAdd() {
         let a = undefined;
-        console.log(a);
 
         if (cities?.length) {
             a = cities.find((citys) => {
@@ -30,6 +32,15 @@ const UnitCity: FC<IUnitCity> = ({ city }) => {
             });
             dispatch(initCity(res));
             await AsyncStorage.setItem("city", JSON.stringify(res));
+            let citis = {...cities2}
+            citis.list = citis.list.filter((citys) => {
+                console.log(citys.id != city.id);
+                
+                if(citys.id != city.id) return citys;           
+            })
+            console.log(citis.list);
+            
+            dispatch(setCityApi(citis))
         }
     }
 

@@ -13,7 +13,7 @@ import { FC } from "react";
 
 const maxHeight = Dimensions.get("window").height;
 
-const CityList: FC<ICityList> = ({ navigation }) => {
+const CityList: FC<ICityList> = ({ navigation, route }) => {
     const cities = useAppSelector((state) => state.cityReducer.city);
     const dispatch = useDispatch();
     const [visible, setVisible] = useState(false);
@@ -23,14 +23,21 @@ const CityList: FC<ICityList> = ({ navigation }) => {
     const push = (val: string) => {
         if (!array.join(" ").includes(val)) {
             setArray([...array, val]);
+            return true
         } else {
             setArray(
                 array.filter((arr) => {
                     return arr != val;
                 })
             );
+            return false
         }
     };
+
+    const callbackVisible=()=>{
+        setVisible((p) => !p)
+        setArray([])
+    }
 
     const deleteArray = async () => {
         let a = [...cities];
@@ -44,7 +51,20 @@ const CityList: FC<ICityList> = ({ navigation }) => {
         await AsyncStorage.setItem("city", JSON.stringify(a));
 
         dispatch(initCity(a));
+        setArray([])
     };
+
+    useEffect(()=> {
+        console.log(route);
+        
+        if(visible){
+            setVisible(false)
+        }
+    }, [])
+
+    useEffect(()=> {
+        return()=>setArray([])
+    }, [])
 
     return (
         <View style={{ minHeight: maxHeight }}>
@@ -63,7 +83,7 @@ const CityList: FC<ICityList> = ({ navigation }) => {
                         <AllCityUnit
                             key={city.id}
                             push={push}
-                            callback={() => setVisible((p) => !p)}
+                            callback={() => callbackVisible()}
                             visible={visible}
                             city={city}
                         />

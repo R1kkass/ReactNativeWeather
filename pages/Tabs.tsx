@@ -39,24 +39,34 @@ export default function Tabs({ navigation }) {
             <Tab.Navigator
                 screenOptions={{
                     tabBarScrollEnabled: true,
-                    tabBarIndicatorStyle: {},
+                    tabBarIndicatorStyle: {
+                        borderRadius: 1000,
+                        backgroundColor: 'transparent', 
+                        height: 30,
+                        zIndex: 1,
+                        width: "0.1%",
+                        position: 'relative',
+                        top:-0
+                    },
+                    tabBarStyle: {
+                        position: 'absolute',
+                        backgroundColor: 'transparent',
+                        height: 50,
+                        elevation: 0,
+                        overflow: 'hidden',
+                        zIndex: 999,
+                    },
+                    tabBarLabelStyle: {
+                        borderRadius: 20,
+                        fontSize: 16,
+                        textTransform: "none",
+                    },
                 }}
                 tabBarOptions={{
                     activeBackgroundColor: {
                         backgroundColor: 'white'
                     },
                     pressOpacity: 0.3,
-                    labelStyle: {
-                        borderRadius: 20,
-                        fontSize: 16,
-                        textTransform: "none",
-                    },
-                    style: {
-                        position: 'absolute',
-                        backgroundColor: 'transparent',
-                        height: 50,
-                        elevation: 0,
-                    },
                     tabStyle: {
                         width: "auto",
                         marginLeft: 10,

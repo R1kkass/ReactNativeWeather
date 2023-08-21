@@ -5,19 +5,21 @@ import Animated, {
     withSpring,
 } from "react-native-reanimated";
 import { primary } from "../../app/const/color";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const CheckBoxCity = ({ visible, callback }) => {
     const translateX = useSharedValue(70);
     const handlePress = (num: number) => {
         translateX.value = num;
     };
+    const [check, setCheck] = useState(false);
 
     useEffect(() => {
         if (visible) {
-            handlePress(0);
+            handlePress(-30);
         } else if (!visible) {
             handlePress(70);
+            setCheck(false);
         }
     }, [visible]);
 
@@ -25,10 +27,17 @@ const CheckBoxCity = ({ visible, callback }) => {
         transform: [{ translateX: withSpring(translateX.value) }],
     }));
 
+    function myCallback() {
+        callback();
+        setCheck(!check);
+    }
+
     return (
-        <Animated.View style={[animatedStyles, {marginLeft: 'auto'}]}>
+        <Animated.View style={[animatedStyles, { marginLeft: "auto", position: !visible ? 'relative' : 'relative', left: "0%", maxWidth: 30 }]}>
             <BouncyCheckbox
-                onPress={callback}
+                isChecked={check}
+                disableBuiltInState
+                onPress={myCallback}
                 size={40}
                 fillColor={primary()}
                 style={{ marginLeft: "auto" }}
